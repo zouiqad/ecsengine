@@ -2,7 +2,7 @@
 
 in vec3 vFragPos;       // Fragment position in world space
 in vec3 vNormal;        // Normal vector in world space
-in vec2 vTexCoord;      // Texture coordinates
+//in vec2 vTexCoord;      // Texture coordinates
 
 out vec4 FragColor;
 
@@ -37,7 +37,7 @@ void main()
     vec3 lighting = ambient + diffuse + specular;
 
     // Apply texture
-    vec3 texColor = texture(uTexture, vTexCoord).rgb;
+    // vec3 texColor = texture(uTexture, vTexCoord).rgb;
 
     // Final color
     //FragColor = vec4(lighting * texColor, 1.0);

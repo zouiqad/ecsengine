@@ -74,13 +74,13 @@ int main() {
         gMediator.AddComponent<Renderable>(
             entity,
             Renderable{
-                .color = glm::vec3(1.0f)
+                .color = glm::vec3(randColor(generator), randColor(generator), randColor(generator))
             });
 
         gMediator.AddComponent<Transform>(
               entity,
               Transform{
-                  .position = glm::vec3(0.0f, 0.0f, 0.0f),
+                  .position = glm::vec3(0.0f),
                   .rotation = glm::vec3(randRotation(generator), randRotation(generator), randRotation(generator)),
                   .scale = glm::vec3(scale, scale, scale)
               });

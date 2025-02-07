@@ -8,6 +8,10 @@
 
 extern Mediator gMediator;
 
+void windowResizeCallBack(GLFWwindow* window, int windowWidth, int windowHeight)
+{
+	glViewport(0, 0, windowWidth, windowHeight);
+}
 
 // TODO: Return error to caller
 bool WindowManager::Init(
@@ -38,6 +42,8 @@ bool WindowManager::Init(
 		return false;
 	}
 
+	// Set callbacks
+	glfwSetWindowSizeCallback(mWindow, windowResizeCallBack);
 
 	// Configure OpenGL
 	glViewport (0, 0, windowWidth, windowHeight);
@@ -106,3 +112,5 @@ void WindowManager::ProcessEvents()
 		gMediator.SendEvent(event);
 	}
 }
+
+

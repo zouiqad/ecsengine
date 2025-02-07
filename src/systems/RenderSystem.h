@@ -22,7 +22,6 @@ private:
 
     Entity mCamera;
 
-    GLuint mVao{};
-    GLuint mVboVertices{};
-    GLuint mVboNormals{};
+    GLuint mVAO{};
+    GLuint mVBO{};
 };
