@@ -8,14 +8,20 @@
 
 class Model {
 public:
+    // Constructor for when we want to load a model from a file
     Model(const char *path) {
         loadModel(path);
+    }
+
+    // Constructor for when we want to create the mesh programatically
+    Model(const Mesh& mesh) {
+        mMeshes.push_back(mesh);
     }
 
     virtual void draw(Shader &shader);
 
 private:
-    std::vector<Mesh> meshes;
+    std::vector<Mesh> mMeshes;
     std::string directory;
 
     std::vector<Texture> textures_loaded;

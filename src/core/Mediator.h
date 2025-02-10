@@ -110,9 +110,16 @@ public:
 		mEventManager->SendEvent(eventId);
 	}
 
+
+	void SetMainCamera(Entity camera) { mMainCamera = camera; }
+	Entity GetMainCamera() const { return mMainCamera; }
+
+
 private:
 	std::unique_ptr<ComponentManager> mComponentManager;
 	std::unique_ptr<EntityManager> mEntityManager;
 	std::unique_ptr<EventManager> mEventManager;
 	std::unique_ptr<SystemManager> mSystemManager;
+
+	Entity mMainCamera = 0;
 };

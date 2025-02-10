@@ -19,10 +19,11 @@ public:
 
 	void Shutdown();
 
+
+	bool mFirstMouse;
+	double mLastMouseX, mLastMouseY = 0;
 private:
 	GLFWwindow* mWindow;
 
 	std::bitset<8> mButtons;
-
-	// static void windowResizeCallBack(GLFWwindow* window, unsigned int windowWidth, unsigned int windowHeight);
 };

@@ -64,6 +64,12 @@ add_executable(${CURRENT_TARGET} src/main.cpp
         src/components/Transform.h
         src/systems/CameraControlSystem.cpp
         src/systems/CameraControlSystem.h
+        src/graphics/PrimitiveMeshes.h
+        src/graphics/Skybox.cpp
+        src/graphics/Skybox.h
+        src/components/Cubemap.h
+        src/systems/SkyboxRenderSystem.cpp
+        src/systems/SkyboxRenderSystem.h
 )
 
 #==============================================================

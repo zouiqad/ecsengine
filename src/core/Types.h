@@ -49,11 +49,14 @@ using ParamId = std::uint32_t;
 namespace Events::Window {
 const EventId QUIT = "Events::Window::QUIT"_hash;
 const EventId RESIZED = "Events::Window::RESIZED"_hash;
-const EventId INPUT = "Events::Window::INPUT"_hash;
+const EventId KEYDOWN = "Events::Window::KEYDOWN"_hash;
+const EventId MOUSEMOVE = "Events::Window::MOUSEMOVE"_hash;
 }
 
 namespace Events::Window::Input {
-const ParamId INPUT = "Events::Window::Input::INPUT"_hash;
+const ParamId KEYS_DOWN = "Events::Window::Input::KEYS_DOWN"_hash;
+const ParamId MOUSE_XOFFSET =  "Events::Window::Input::MOUSE_XOFFSET"_hash;
+const ParamId MOUSE_YOFFSET =  "Events::Window::Input::MOUSE_YOFFSET"_hash;
 }
 
 namespace Events::Window::Resized {

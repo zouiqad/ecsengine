@@ -21,7 +21,7 @@ public:
     {
         if constexpr (std::is_same_v<T, glm::mat4>)
         {
-            glUniformMatrix4fv (glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, &value[0][0]);
+            glUniformMatrix4fv(glGetUniformLocation(programID, name.c_str()), 1, GL_FALSE, &value[0][0]);
         }
         else if constexpr (std::is_same_v<T, glm::vec3>)
         {
@@ -29,12 +29,13 @@ public:
         }
         else if constexpr (std::is_same_v<T, float>)
         {
-            glUniform1f(glGetUniformLocation(programID, name.c_str()), 1, (GLfloat*)&value);
+            glUniform1f(glGetUniformLocation(programID, name.c_str()), value);
         }
         else if constexpr (std::is_same_v<T, int>)
         {
-            glUniform1i(glGetUniformLocation(programID, name.c_str()), 1, (GLfloat*)&value);
+            glUniform1i(glGetUniformLocation(programID, name.c_str()), (GLint)&value);
         }
+
     }
 
     unsigned int getID() const { return programID; }

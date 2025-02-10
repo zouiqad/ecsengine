@@ -15,6 +15,13 @@ public:
 
 private:
     std::bitset<8> mButtons;
+    double mPitch, mYaw, mRoll;
 
-    void InputListener(Event& event);
+    // Controls params
+    float mouseSensitivity = 0.1f;
+    float cameraSpeed = 40.0f;
+
+    // Listeners
+    void KeyboardInputListener(Event& event);
+    void MouseInputListener(Event& event);
 };

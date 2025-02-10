@@ -1,9 +1,10 @@
 #include "Mesh.h"
 #include <iostream>
+#include <glm/ext/scalar_constants.hpp>
 
 Mesh::Mesh (std::vector<Vertex> vertices,
-    std::vector<unsigned int> indices,
-    std::vector<Texture> textures) {
+            std::vector<unsigned int> indices,
+            std::vector<Texture> textures) {
     this->vertices = vertices;
     this->indices  = indices;
     this->textures = textures;
@@ -51,6 +52,7 @@ void Mesh::draw (Shader& shader) const {
     unsigned int normalNr   = 1;
     unsigned int heightNr   = 1;
 
+    glUniform1i(glGetUniformLocation(shader.getID(), "uHasTexture"), false);
     for (unsigned int i = 0; i < textures.size (); i++) {
         glActiveTexture (GL_TEXTURE0 + i);
         // active proper texture unit before binding
@@ -68,9 +70,10 @@ void Mesh::draw (Shader& shader) const {
         // transfer unsigned int to string
 
         // now set the sampler to the correct texture unit
-        glUniform1i (
-            glGetUniformLocation (shader.getID (), "uTexture"),
-            i);
+        shader.setUniform("uTexture", i);
+        glUniform1i(glGetUniformLocation(shader.getID(), "uHasTexture"), true);
+
+
         // and finally bind the texture
         glBindTexture (GL_TEXTURE_2D, textures[i].id);
     }

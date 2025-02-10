@@ -15,10 +15,12 @@ public:
 
     void Update(float dt);
 
+    Entity GetCameraEntity() const { return mCamera; }
+
 private:
     void WindowSizeListener(Event& event);
 
-    std::unique_ptr<Shader> shader;
+    std::unique_ptr<Shader> mShader;
 
     Entity mCamera;
 

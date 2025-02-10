@@ -8,7 +8,7 @@
 
 
 void Model::draw (Shader& shader) {
-    for (unsigned int i = 0; i < meshes.size (); i++) meshes[i].draw (shader);
+    for (unsigned int i = 0; i < mMeshes.size (); i++) mMeshes[i].draw (shader);
 }
 
 void Model::loadModel (std::string path) {
@@ -30,7 +30,7 @@ void Model::processNode (aiNode* node, const aiScene* scene) {
     // process all the node's meshes (if any)
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back (processMesh (mesh, scene));
+        mMeshes.push_back (processMesh (mesh, scene));
     }
     // then do the same for each of its children
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
@@ -81,16 +81,16 @@ Mesh Model::processMesh (aiMesh* mesh, const aiScene* scene) {
             aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert (textures.end (), diffuseMaps.begin (),
             diffuseMaps.end ());
-        // std::vector<Texture> specularMaps = loadMaterialTextures (material,
-        //     aiTextureType_SPECULAR, "texture_specular");
-        // textures.insert (textures.end (), specularMaps.begin (),
-        //     specularMaps.end ());
+        std::vector<Texture> specularMaps = loadMaterialTextures (material,
+            aiTextureType_SPECULAR, "texture_specular");
+        textures.insert (textures.end (), specularMaps.begin (),
+            specularMaps.end ());
     }
 
     return Mesh (vertices, indices, textures);
 }
 
-unsigned int loadTexture (const char* path,
+inline unsigned int loadTexture (const char* path,
     const std::string& directory,
     bool gamma = false) {
     std::string filename = std::string (path);

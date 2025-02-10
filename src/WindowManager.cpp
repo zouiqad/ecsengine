@@ -13,6 +13,33 @@ void windowResizeCallBack(GLFWwindow* window, int windowWidth, int windowHeight)
 	glViewport(0, 0, windowWidth, windowHeight);
 }
 
+void windowMouseCallBack(GLFWwindow* window, double xpos, double ypos) {
+	WindowManager *windowManager = reinterpret_cast<WindowManager *>(glfwGetWindowUserPointer(window));
+	if (windowManager->mFirstMouse)
+	{
+		windowManager->mLastMouseX = xpos;
+		windowManager->mLastMouseY = ypos;
+		windowManager->mFirstMouse = false;
+	}
+
+	double xoffset = xpos - windowManager->mLastMouseX;
+	double yoffset = windowManager->mLastMouseY - ypos;
+
+	if(xoffset != 0 || yoffset != 0) {
+		Event event(Events::Window::MOUSEMOVE);
+		event.SetParam(Events::Window::Input::MOUSE_XOFFSET, xoffset);
+		event.SetParam(Events::Window::Input::MOUSE_YOFFSET, yoffset);
+		gMediator.SendEvent(event);
+	}
+
+	windowManager->mLastMouseX = xpos;
+	windowManager->mLastMouseY = ypos;
+
+	float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+}
+
 // TODO: Return error to caller
 bool WindowManager::Init(
 	std::string const& windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int windowPositionX,
@@ -44,12 +71,21 @@ bool WindowManager::Init(
 
 	// Set callbacks
 	glfwSetWindowSizeCallback(mWindow, windowResizeCallBack);
+	glfwSetCursorPosCallback(mWindow, windowMouseCallBack);
 
 	// Configure OpenGL
 	glViewport (0, 0, windowWidth, windowHeight);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 
+	// Disable cursor
+	glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	mLastMouseX = windowWidth / 2.0;
+	mLastMouseY = windowHeight / 2.0;
+
+
+	glfwSetWindowUserPointer(mWindow, this);
 	return true;
 }
 
@@ -57,6 +93,9 @@ bool WindowManager::Init(
 void WindowManager::Update()
 {
 	glfwSwapBuffers(mWindow);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 
@@ -70,45 +109,31 @@ void WindowManager::ProcessEvents()
 {
 	glfwPollEvents();
 
-	bool buttonStateChanged = true;
-
-	if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE))
+	if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		gMediator.SendEvent(Events::Window::QUIT);
 	}
-	else if (glfwGetKey(mWindow, GLFW_KEY_W))
-	{
-		mButtons.set(static_cast<std::size_t>(InputButtons::W));
-	}
-	else if (glfwGetKey(mWindow, GLFW_KEY_A))
-	{
-		mButtons.set(static_cast<std::size_t>(InputButtons::A));
-	}
-	else if (glfwGetKey(mWindow, GLFW_KEY_S))
-	{
-		mButtons.set(static_cast<std::size_t>(InputButtons::S));
-	}
-	else if (glfwGetKey(mWindow, GLFW_KEY_D))
-	{
-		mButtons.set(static_cast<std::size_t>(InputButtons::D));
-	}
-	else if (glfwGetKey(mWindow, GLFW_KEY_Q))
-	{
-		mButtons.set(static_cast<std::size_t>(InputButtons::Q));
-	}
-	else if (glfwGetKey(mWindow, GLFW_KEY_E))
-	{
-		mButtons.set(static_cast<std::size_t>(InputButtons::E));
-	}
-	else
-	{
-		buttonStateChanged = false;
-	}
 
-	if (buttonStateChanged)
+	std::bitset<8> currentButtons;
+	currentButtons.set(static_cast<std::size_t>(InputButtons::W),
+						glfwGetKey(mWindow, GLFW_KEY_W) == GLFW_PRESS);
+	currentButtons.set(static_cast<std::size_t>(InputButtons::A),
+						glfwGetKey(mWindow, GLFW_KEY_A) == GLFW_PRESS);
+	currentButtons.set(static_cast<std::size_t>(InputButtons::S),
+						glfwGetKey(mWindow, GLFW_KEY_S) == GLFW_PRESS);
+	currentButtons.set(static_cast<std::size_t>(InputButtons::D),
+						glfwGetKey(mWindow, GLFW_KEY_D) == GLFW_PRESS);
+	currentButtons.set(static_cast<std::size_t>(InputButtons::Q),
+						glfwGetKey(mWindow, GLFW_KEY_Q) == GLFW_PRESS);
+	currentButtons.set(static_cast<std::size_t>(InputButtons::E),
+						glfwGetKey(mWindow, GLFW_KEY_E) == GLFW_PRESS);
+
+
+	if (currentButtons != mButtons)
 	{
-		Event event(Events::Window::INPUT);
-		event.SetParam(Events::Window::Input::INPUT, mButtons);
+		mButtons = currentButtons;
+		Event event(Events::Window::KEYDOWN);
+		event.SetParam(Events::Window::Input::KEYS_DOWN, mButtons);
 		gMediator.SendEvent(event);
 	}
 }
